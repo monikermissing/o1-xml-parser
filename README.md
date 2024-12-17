@@ -38,7 +38,7 @@ You are tasked with following my instructions.
 
 Use the included project instructions as a general guide.
 
-You will respond with 2 sections: A summary section and an XLM section.
+You will respond with 2 sections: A summary section and an XML section.
 
 Here are some notes on how you should respond in the summary section:
 
