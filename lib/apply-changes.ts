@@ -1,5 +1,6 @@
 import { promises as fs } from "fs";
 import { dirname, join } from "path";
+import * as fsSync from "fs";
 
 interface FileChange {
   file_summary: string;
@@ -17,7 +18,7 @@ export async function applyFileChanges(change: FileChange, projectDirectory: str
       if (!file_code) {
         throw new Error(`No file_code provided for CREATE operation on ${file_path}`);
       }
-      await ensureDirectoryExists(dirname(fullPath));
+      await ensureDirectoryExists(fullPath);
       await fs.writeFile(fullPath, file_code, "utf-8");
       break;
 
@@ -25,7 +26,7 @@ export async function applyFileChanges(change: FileChange, projectDirectory: str
       if (!file_code) {
         throw new Error(`No file_code provided for UPDATE operation on ${file_path}`);
       }
-      await ensureDirectoryExists(dirname(fullPath));
+      await ensureDirectoryExists(fullPath);
       await fs.writeFile(fullPath, file_code, "utf-8");
       break;
 
@@ -39,12 +40,14 @@ export async function applyFileChanges(change: FileChange, projectDirectory: str
   }
 }
 
-async function ensureDirectoryExists(dir: string) {
+async function ensureDirectoryExists(filePath: string) {
+  const dirPath = dirname(filePath);
+  
   try {
-    await fs.mkdir(dir, { recursive: true });
+    await fs.mkdir(dirPath, { recursive: true });
   } catch (error: any) {
     if (error.code !== "EEXIST") {
-      console.error(`Error creating directory ${dir}:`, error);
+      console.error(`Error creating directory ${dirPath}:`, error);
       throw error;
     }
   }
